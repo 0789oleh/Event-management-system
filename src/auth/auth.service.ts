@@ -18,6 +18,10 @@ export class AuthService {
     return { token };
   }
 
+  async register(name: string, email: string, password: string) {
+    return this.userService.register(name, email, password);
+  }
+
   async validateToken(payload: any) {
     return this.userService.findByEmail(payload.email);
   }

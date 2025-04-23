@@ -15,6 +15,7 @@ services:
 
   nestapp:
     build: .
+    user: node
     container_name: nest-app
     ports:
       - '3000:3000'

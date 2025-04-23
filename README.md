@@ -49,4 +49,4 @@ With Mau, you can deploy your application in just a few clicks, allowing you to 
 ## Video
 
 
-<video src="record.webm"></video>
+<video src="./record.webm"></video>

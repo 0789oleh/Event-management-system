@@ -6,7 +6,6 @@ RUN mkdir -p /app/dist && chown -R node:node /app/dist
 # Рабочая директория внутри контейнера
 WORKDIR /app
 
-
 # Копируем package.json и package-lock.json
 COPY package*.json ./
 

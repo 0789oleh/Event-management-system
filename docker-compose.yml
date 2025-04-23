@@ -5,9 +5,9 @@ services:
     image: postgres:15
     container_name: postgres
     environment:
-      POSTGRES_USER: your_db_user
-      POSTGRES_PASSWORD: your_db_password
-      POSTGRES_DB: your_db_name
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: events
     ports:
       - '5432:5432'
     volumes:
@@ -21,9 +21,9 @@ services:
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_USER: your_db_user
-      POSTGRES_PASSWORD: your_db_password
-      POSTGRES_DB: your_db_name
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: events
       JWT_SECRET: super-secret-key
       JWT_EXPIRES_IN: 3600s
     depends_on:
@@ -31,7 +31,8 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: npm run start:dev
+    command: ["./wait-for-it.sh", "postgres:5432", "--", "npm", "run", "start:dev"]
 
 volumes:
   pgdata:
+

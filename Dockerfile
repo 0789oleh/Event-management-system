@@ -1,22 +1,18 @@
-# Используем официальный Node.js образ
-FROM node:18
+FROM node:18-alpine AS builder
 
-RUN mkdir -p /app/dist && chown -R node:node /app/dist
-
-# Рабочая директория внутри контейнера
 WORKDIR /app
 
-# Копируем package.json и package-lock.json
 COPY package*.json ./
-
-# Устанавливаем зависимости
 RUN npm install
 
-# Копируем остальные файлы проекта
 COPY . .
+RUN npm run builder
 
-# Открываем порт
-EXPOSE 3000
+COPY --from=builder /package*.json ./
+COPY --from=builder /dist ./dist
 
-# Запуск приложения
-CMD ["npm", "run", "start:dev"]
+RUN npm install --only=production
+
+ENV NODE_ENV=production
+
+CMD ["node", "dist/main.js"]

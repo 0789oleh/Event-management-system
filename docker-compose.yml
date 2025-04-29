@@ -13,28 +13,43 @@ services:
     networks:
       - backend
 
-  nestapp:
+  nestapp_dev:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: nest-app
+    container_name: nest-app-dev
     ports:
       - "3000:3000"
     volumes:
       - .:/app
       - /app/node_modules
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: events
-      JWT_SECRET: super-secret-key
-      JWT_EXPIRES_IN: 3600s
+    env_file:
+      - .env
     depends_on:
       - postgres
     networks:
       - backend
+    profiles:
+      - dev
+
+  nestapp_prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: event-management-service
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    networks:
+      - backend
+    profiles:
+      - prod
 
 volumes:
   pgdata:

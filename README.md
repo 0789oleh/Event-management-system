@@ -16,5 +16,10 @@ $ cd ./Event-management-system
 
 ```bash
 # development
-$ docker compose up --build
+$ docker compose --profile dev up --build
 ```
+
+
+```bash
+# production 
+$ docker compose --profile prod up --build

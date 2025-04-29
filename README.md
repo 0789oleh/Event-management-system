@@ -2,7 +2,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This was to be just another test task. After it was rejected, some changes were made here.
 
 ## Project setup
 

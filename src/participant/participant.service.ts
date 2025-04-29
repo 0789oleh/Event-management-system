@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { Participant } from './participant';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
@@ -26,11 +26,21 @@ export class ParticipantService {
             participant.eventId = eventId;
             participant.userId = userId;
             
+            const existingRegistration = await this.participantRepository.findOne({
+                relations: ['user', 'event'], 
+                where:  { userId: participant.userId ,  eventId: participant.eventId } 
+            });
+          
+            if (existingRegistration) {
+                throw new ConflictException('User already registered for this event');
+            }
+
             return this.participantRepository.save(participant);
+
     }
 
-    async deleteParticipant(id: number): Promise<DeleteResult> {
-        return await this.participantRepository.delete(id);
+    async deleteParticipant(id: number, participantId: number): Promise<DeleteResult> {
+        return this.participantRepository.delete({ id, eventId: participantId });
     }
 
     async findAllParticipants(): Promise<Participant[]> {

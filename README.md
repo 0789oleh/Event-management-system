@@ -9,7 +9,7 @@
 Clone or download this repository. After that navigate to the folder.
 
 ```bash
-$ cd ./Internship-day-01-backend-task
+$ cd ./Event-management-system
 ```
 
 ## Compile and run the project
@@ -18,19 +18,3 @@ $ cd ./Internship-day-01-backend-task
 # development
 $ docker compose up --build
 ```
-or
-
-```bash
-$ docker compose up --build postgres
-```
-then open another terminal and type
-
-```bash
-$ npm install
-$ npm run start
-```
-
-
-## Video
-
-<video src="./record.webm"></video>

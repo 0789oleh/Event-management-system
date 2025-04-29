@@ -39,7 +39,7 @@ export class ParticipantService {
 
     }
 
-    async deleteParticipant(id: number, participantId: number): Promise<DeleteResult> {
+    async deleteParticipant(participantId: number, id: number): Promise<DeleteResult> {
         return this.participantRepository.delete({ id, eventId: participantId });
     }
 

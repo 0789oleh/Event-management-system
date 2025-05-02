@@ -7,11 +7,12 @@ import { Event } from 'src/event/event';
 @Injectable()
 export class ParticipantService {
     constructor(@InjectRepository(Participant) 
-    private readonly participantRepository: Repository<Participant>,
-    private readonly logger = new Logger(ParticipantService.name),
-       
+    private readonly participantRepository: Repository<Participant>,   
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>) {}
+
+
+    private readonly logger = new Logger(ParticipantService.name)
 
     async createParticipant(userId: number, eventId: number): Promise<Participant | string> {
             const event = await this.eventRepository.findOneBy({ id: eventId });

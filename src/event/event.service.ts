@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { Event } from './event';
@@ -6,6 +6,7 @@ import { Event } from './event';
 @Injectable()
 export class EventService {
     constructor(@InjectRepository(Event) private readonly eventRepository: Repository<Event>) {}
+    private readonly logger = new Logger(EventService.name)
 
     async createEvent(name: string, description: string, location: string, maxParticipants: number): Promise<Event> {
         try {
@@ -15,18 +16,21 @@ export class EventService {
               location,
               maxParticipants,
             });
+        this.logger.log(`Creating event with name ${name}`);
         return await this.eventRepository.save(event);
         } catch(error){
-            console.error('Error creating event:', error);
+            this.logger.error(`Error creating event:`, error);
             throw new Error('Unable to create event');
         }
     }
 
     async findAllEvent(): Promise<Event[]> {
+        this.logger.log('Searching for all events');
         return await this.eventRepository.find();
     }
 
     async  findEventById(id: number): Promise<Event | null> {
+        this.logger.log(`Finding event with id ${id}`);
         return await this.eventRepository.findOneBy({ id });
     }
 
@@ -41,6 +45,7 @@ export class EventService {
     }
 
     async removeEvent(id: number): Promise<DeleteResult> {
+        this.logger.log(`Deleting event with id = ${id}`)
         return await this.eventRepository.delete(id);
     }
 

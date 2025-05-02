@@ -23,3 +23,9 @@ $ docker compose --profile dev up --build
 ```bash
 # production 
 $ docker compose --profile prod up --build
+```
+
+```bash
+# test
+$ npm run test
+```

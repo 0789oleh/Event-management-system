@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { Participant } from './participant';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
@@ -8,6 +8,7 @@ import { Event } from 'src/event/event';
 export class ParticipantService {
     constructor(@InjectRepository(Participant) 
     private readonly participantRepository: Repository<Participant>,
+    private readonly logger = new Logger(ParticipantService.name),
        
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>) {}
@@ -15,11 +16,13 @@ export class ParticipantService {
     async createParticipant(userId: number, eventId: number): Promise<Participant | string> {
             const event = await this.eventRepository.findOneBy({ id: eventId });
             if (!event) {
+                this.logger.error(`Event ${eventId} not found`);
                 throw new Error(`Event with id ${eventId} not found`);
             }
             const count = await this.participantRepository.count({ where: { eventId } });
     
             if (count >= event.maxParticipants) {
+                this.logger.error(`Registering on ${eventId}W not possible.`);
                 return `Event with id ${eventId} already has maximum participants`;
             }
             const participant: Participant = new Participant();
@@ -32,22 +35,27 @@ export class ParticipantService {
             });
           
             if (existingRegistration) {
+                this.logger.error(`User already registered for ${eventId}`)
                 throw new ConflictException('User already registered for this event');
             }
 
+            this.logger.log(`Registering a new participant to the event with ${eventId}`)
             return this.participantRepository.save(participant);
 
     }
 
     async deleteParticipant(participantId: number, id: number): Promise<DeleteResult> {
+        this.logger.log(`Unregistering participant from `)
         return this.participantRepository.delete({ id, eventId: participantId });
     }
 
     async findAllParticipants(): Promise<Participant[]> {
+        this.logger.log(`Searching for all participant`)
         return await this.participantRepository.find();
     }
 
     async findParticipantById(id: number): Promise<Participant|null> {
+        this.logger.log(`Searching relationship User-Event by id ${id}`)
         return await this.participantRepository.findOneBy({id });
     }
 
@@ -59,16 +67,19 @@ export class ParticipantService {
     
         const count = await this.participantRepository.count({ where: { eventId } });
         if (count >= event.maxParticipants) {
+            this.logger.log(`Can't register new participant`)
             return `Event with id ${eventId} already has maximum participants`;
         }
     
         const participant = await this.participantRepository.findOneBy({ id: participantId });
         if (!participant) {
+            this.logger.error(`Throwing the new error. Participant ${participantId} not found.`);
             throw new Error(`Participant with id ${participantId} not found`);
         }
     
         participant.eventId = eventId;
         
+        this.logger.log("Changing event to ${eventId}");
         return this.participantRepository.save(participant);
     }
 

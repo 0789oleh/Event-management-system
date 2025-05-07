@@ -1,0 +1,103 @@
+{
+    "info": {
+      "name": "Event API",
+      "_postman_id": "e1dd3df9-15c2-4373-99e4-abc123456789",
+      "description": "Тестовая коллекция для проверки Event API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Register User",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"John\",\n  \"email\": \"john@example.com\",\n  \"password\": \"1234\"\n}",
+            "options": { "raw": { "language": "json" } }
+          },
+          "url": { "raw": "{{baseUrl}}/users/register", "host": ["{{baseUrl}}"], "path": ["users", "register"] }
+        },
+        "response": []
+      },
+      {
+        "name": "Login User",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"1234\"\n}",
+            "options": { "raw": { "language": "json" } }
+          },
+          "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+        },
+        "response": []
+      },
+      {
+        "name": "Create Event (Auth)",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"concert\",\n  \"description\": \"Live concert\",\n  \"location\": \"Middletown\",\n  \"maxParticipants\": 200\n}",
+            "options": { "raw": { "language": "json" } }
+          },
+          "url": { "raw": "{{baseUrl}}/event", "host": ["{{baseUrl}}"], "path": ["event"] }
+        },
+        "response": []
+      },
+      {
+        "name": "Get Events",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": { "raw": "{{baseUrl}}/event", "host": ["{{baseUrl}}"], "path": ["event"] }
+        },
+        "response": []
+      },
+      {
+        "name": "Register for Event (Auth)",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{}",
+            "options": { "raw": { "language": "json" } }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/participants/register/1",
+            "host": ["{{baseUrl}}"],
+            "path": ["participants", "register", "1"]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "Get Event Participants",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "{{baseUrl}}/participants/event/1",
+            "host": ["{{baseUrl}}"],
+            "path": ["participants", "event", "1"]
+          }
+        },
+        "response": []
+      }
+    ],
+    "variable": [
+      { "key": "baseUrl", "value": "http://localhost:3000" },
+      { "key": "accessToken", "value": "" }
+    ]
+  }
+  

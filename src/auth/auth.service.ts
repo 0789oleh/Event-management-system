@@ -1,6 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/users/users.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto'
+import { UserLoginResponseDto } from 'src/users/dto/user-login-response.dto';
+import { UserResponseDto } from 'src/users/dto/user-responce.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,19 +14,18 @@ export class AuthService {
 
   private readonly logger = new Logger(AuthService.name)
 
-  async login(email: string, password: string) {
+  async login(email: string, password: string): Promise<UserLoginResponseDto> {
     const user = await this.userService.validateUser(email, password);
-    if (!user) return null;
+    if (!user) {
+      throw new UnauthorizedException('Хибний email або пароль');
+    }
 
-    const payload = { sub: user.id, email: user.email };
-    const token = this.jwtService.sign(payload);
-    this.logger.log(`Loging in user`);
-    return { token };
+    const token = this.jwtService.sign({ sub: user.id, email: user.email });
+    return { access_token: token, user: { id: user.id, name: user.name, email: user.email } };
   }
   
-  async register(name: string, email: string, password: string) {
-    this.logger.log(`Registering new user`);
-    return this.userService.register(name, email, password);
+  async register(dto: CreateUserDto): Promise<UserResponseDto> {
+    return this.userService.register(dto);
   }
 
   async validateToken(payload: any) {

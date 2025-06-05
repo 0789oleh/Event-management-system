@@ -4,13 +4,19 @@ import { User } from 'src/users/users';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { Participant } from './participant';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('participants')
 @Controller('participants')
 export class ParticipantController {
   constructor(private readonly participantService: ParticipantService) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
+  @ApiOperation({ summary: 'Зареєструвати користувача на подію' })
+  @ApiResponse({ status: 201, description: 'Успішно зареєстрвано' })
+  @ApiResponse({ status: 404, description: 'Не знайдено'})
+  @UseGuards(AuthGuard('jwt'))
   async add(@CurrentUser() user: User,
   @Body('eventId') eventId: number) {
     const userId = user.id;
@@ -18,6 +24,8 @@ export class ParticipantController {
   }
 
   @Get()
+  @ApiOperation({ summary: "Знайти всі зв'язки учасник -- подія" })
+  @ApiResponse({ status: 200, description: 'Успішно знайдено' })
   async findAll(){
     return await this.participantService.findAllParticipants();
   }

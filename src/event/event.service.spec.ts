@@ -3,6 +3,7 @@ import { EventService } from './event.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Event } from './event';
 import { Repository } from 'typeorm';
+import { CreateEventDto } from './dto/create-event.dto';
 
 describe('EventService', () => {
   let service: EventService;
@@ -29,13 +30,22 @@ describe('EventService', () => {
   });
 
   it('should create event', async () => {
-    const mockEvent = { name: 'concert', location: 'City' };
-    repo.create!.mockReturnValue(mockEvent);
-    repo.save!.mockResolvedValue({ id: 1, ...mockEvent });
+    const dto: CreateEventDto = {
+      name: 'concert',
+      description: 'some artist',
+      location: 'City',
+      maxParticipants: 100,
+    };
+  
+    const mockSavedEvent = { id: 1, ...dto };
 
-    const result = await service.createEvent('concert', '', 'City', 100);
-    expect(result).toMatchObject({ name: 'concert', location: 'City' });
-    expect(repo.save).toHaveBeenCalled();
+  repo.create!.mockReturnValue(dto);
+  repo.save!.mockResolvedValue(mockSavedEvent);
+
+  const result = await service.createEvent(dto);
+
+  expect(result).toEqual(mockSavedEvent);
+  expect(repo.save).toHaveBeenCalledWith(dto);
   });
 
   it('should find all events', async () => {

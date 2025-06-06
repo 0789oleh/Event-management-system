@@ -7,6 +7,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserResponseDto } from 'src/users/dto/user-responce.dto';
 import { UserLoginResponseDto } from 'src/users/dto/user-login-response.dto';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -14,6 +15,11 @@ export class AuthController {
   constructor(private authService: AuthService) {}
   
   @ApiResponse({ status: 201, type: UserResponseDto })
+  @ApiOperation({ 
+    summary: "Реєстрація нового користувача у системі",
+    description: "3 спроби раз на п'ять хвилин"
+  })
+  @Throttle({ login: { limit: 3, ttl: 300000 } }) 
   @Post('register')
   async register(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
     return this.authService.register(dto);
@@ -21,10 +27,12 @@ export class AuthController {
     
 
   @Post('login')
-  @ApiOperation({ summary: 'Войти и получить JWT + данные пользователя' })
+  @Throttle({ login: { limit: 3, ttl: 300000 } }) 
+  @ApiOperation({ summary: 'Увійти та отримати JWT + данні користувача', 
+    description: "3 cпроби раз у 5 хвилин" })
   @ApiBody({ type: LoginUserDto })
   @ApiResponse({ status: 200, type: UserLoginResponseDto })
   async login(@Body() dto: LoginUserDto): Promise<UserLoginResponseDto> {
     return this.authService.login(dto.email, dto.password);
   }
-  }
+}

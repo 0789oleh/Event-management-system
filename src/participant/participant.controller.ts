@@ -5,9 +5,11 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { Participant } from './participant';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('participants')
 @Controller('participants')
+@Throttle({default: {limit: 100, ttl: 10000}})
 export class ParticipantController {
   constructor(private readonly participantService: ParticipantService) {}
 

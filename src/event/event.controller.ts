@@ -3,11 +3,13 @@ import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/s
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { Throttle } from '@nestjs/throttler';
 
 /**
  * 
  */
 @ApiTags('event') // Tag for this controller
+@Throttle({default: {limit: 100, ttl: 10000}})
 @Controller('event')
 export class EventController {
     constructor(private readonly eventService: EventService) {}

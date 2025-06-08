@@ -8,6 +8,7 @@ import { UserResponseDto } from 'src/users/dto/user-responce.dto';
 import { UserLoginResponseDto } from 'src/users/dto/user-login-response.dto';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { Throttle } from '@nestjs/throttler';
+import { register } from 'module';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -19,15 +20,15 @@ export class AuthController {
     summary: "Реєстрація нового користувача у системі",
     description: "3 спроби раз на п'ять хвилин"
   })
-  @Throttle({ login: { limit: 3, ttl: 300000 } }) 
+  @Throttle({ register: { limit: 3, ttl: 300000 } }) 
   @Post('register')
   async register(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
     return this.authService.register(dto);
   }
     
 
-  @Post('login')
   @Throttle({ login: { limit: 3, ttl: 300000 } }) 
+  @Post('login')
   @ApiOperation({ summary: 'Увійти та отримати JWT + данні користувача', 
     description: "3 cпроби раз у 5 хвилин" })
   @ApiBody({ type: LoginUserDto })

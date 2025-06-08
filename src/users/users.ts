@@ -7,12 +7,12 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column( { length: 50 })
   name: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 50 })
   email: string;
 
-  @Column()
+  @Column({ length: 256 })
   password: string; // password hash
 }

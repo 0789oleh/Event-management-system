@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { Event } from './event';
@@ -17,7 +17,7 @@ export class EventService {
             return await this.eventRepository.save(event);
           } catch (error) {
             this.logger.error(`Error while creating event: ${error.message}`, error.stack);
-            throw new Error('Unable to create event');
+            throw new InternalServerErrorException('Unable to create event');
           }
     }
 

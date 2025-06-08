@@ -17,6 +17,7 @@ export class UserService {
   async register(dto: CreateUserDto): Promise<UserResponseDto> {
     const existing = await this.userRepository.findOneBy({ email: dto.email });
     if (existing) {
+      this.logger.warn(`User ${dto.email} exists`)
       throw new Error('User already exists');
     }
   
@@ -27,6 +28,7 @@ export class UserService {
     const saved = await this.userRepository.save(user) as User;
   
     //UserResponseDto convertion
+    this.logger.log(`Creating new user with email ${dto.email}`)
     const { id, name, email } = saved;
     return { id, name, email };
   }

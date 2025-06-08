@@ -29,3 +29,10 @@ $ docker compose --profile prod up --build
 # test
 $ npm run test
 ```
+
+
+TODO
+
+1. Tests
+2. Gihub cI/CD
+3. JSDoc

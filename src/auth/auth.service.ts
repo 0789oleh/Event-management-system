@@ -17,6 +17,7 @@ export class AuthService {
   async login(email: string, password: string): Promise<UserLoginResponseDto> {
     const user = await this.userService.validateUser(email, password);
     if (!user) {
+      this.logger.warn(`Can't authorize user`)
       throw new UnauthorizedException('Хибний email або пароль');
     }
 
@@ -25,6 +26,7 @@ export class AuthService {
   }
   
   async register(dto: CreateUserDto): Promise<UserResponseDto> {
+    this.logger.log(`Starting a new user creation. Transfering task to userService`)
     return this.userService.register(dto);
   }
 

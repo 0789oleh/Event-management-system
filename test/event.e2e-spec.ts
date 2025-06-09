@@ -36,7 +36,7 @@ describe('EventModule (e2e on SQLite)', () => {
   it('GET /event → пустой массив', async () => {
     const res = await request(app.getHttpServer()).get('/event');
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body).toEqual( {"data": [], "total": 0});
   });
 
   it('POST /event → создаёт и возвращает объект', async () => {

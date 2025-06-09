@@ -14,6 +14,10 @@ describe('EventService', () => {
       create: jest.fn(),
       save: jest.fn(),
       find: jest.fn(),
+      findAndCount: jest.fn().mockResolvedValue([
+        [{ id: 1, name: 'Test Event' }], // data
+          1,                               // total
+        ]),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -51,6 +55,6 @@ describe('EventService', () => {
   it('should find all events', async () => {
     repo.find!.mockResolvedValue([{ name: 'test' }]);
     const events = await service.findAllEvent();
-    expect(events.length).toBeGreaterThan(0);
+    expect(events.data.length).toBeGreaterThan(0);
   });
-});
+}); 

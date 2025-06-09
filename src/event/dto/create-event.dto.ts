@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsAlpha, IsInt, IsString } from "class-validator";
+import { IsInt, IsString } from "class-validator";
 
 export class CreateEventDto {
   @IsString()

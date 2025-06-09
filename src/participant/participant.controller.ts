@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ParticipantService } from './participant.service';
 import { User } from 'src/users/users';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
@@ -28,8 +28,11 @@ export class ParticipantController {
   @Get()
   @ApiOperation({ summary: "Знайти всі зв'язки учасник -- подія" })
   @ApiResponse({ status: 200, description: 'Успішно знайдено' })
-  async findAll(){
-    return await this.participantService.findAllParticipants();
+  async findAll(        
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ){
+    return await this.participantService.findAllParticipants(page, limit);
   }
 
   @Get(':id')

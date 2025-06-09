@@ -1,8 +1,17 @@
 # Event Manager App Backend
 
+![CI](https://github.com/0789oleh/event-management-system/actions/workflows/ci.yml/badge.svg)
+
 ## Description
 
-This was to be just another test task. After it was rejected, some changes were made here.
+Backend API for event management. 
+
+**Requirements**:
+
+* Node.js;
+* NPM;
+* Docker + Docker compose
+
 
 ## Project setup
 
@@ -27,12 +36,11 @@ $ docker compose --profile prod up --build
 
 ```bash
 # test
-$ npm run test
+$ npm run tests
 ```
 
 
 TODO
 
-1. Tests
-2. Gihub cI/CD
+2. Gihub СI/CD
 3. JSDoc

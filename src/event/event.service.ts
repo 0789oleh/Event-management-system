@@ -21,9 +21,17 @@ export class EventService {
           }
     }
 
-    async findAllEvent(): Promise<Event[]> {
-        this.logger.log('Searching for all events');
-        return await this.eventRepository.find();
+    async findAllEvent(page = 1, limit = 10): Promise<{ data: Event[]; total: number }> {
+      this.logger.log(`Searching for ${limit} events at ${page} page`)
+      const skip = (page - 1) * limit;
+    
+      const [data, total] = await this.eventRepository.findAndCount({
+        skip,
+        take: limit,
+        order: { id: 'ASC' },
+      });
+    
+      return { data, total };
     }
 
     async  findEventById(id: number): Promise<Event | null> {

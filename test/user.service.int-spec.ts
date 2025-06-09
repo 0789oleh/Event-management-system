@@ -3,12 +3,14 @@ import { UserService } from '../src/users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../src/users/users';
 import { ConfigModule } from '@nestjs/config';
+import { DataSource } from 'typeorm';
 
 describe('UserService (Integration)', () => {
   let service: UserService;
+  let module: TestingModule;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
@@ -39,6 +41,7 @@ describe('UserService (Integration)', () => {
   });
 
   afterAll(async () => {
-    // можно закрыть соединение
+    const dataSource = module.get<DataSource>(DataSource);
+    await dataSource.destroy();
   });
 });

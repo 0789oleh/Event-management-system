@@ -50,10 +50,19 @@ export class ParticipantService {
         return this.participantRepository.delete({ id, eventId: participantId });
     }
 
-    async findAllParticipants(): Promise<Participant[]> {
-        this.logger.log(`Searching for all participant`)
-        return await this.participantRepository.find();
+    async findAllParticipants(page = 1, limit = 10): Promise<{ data: Participant[]; total: number }> {
+        this.logger.log(`Searching for ${limit} participants at ${page} page`)
+        const skip = (page - 1) * limit;
+      
+        const [data, total] = await this.participantRepository.findAndCount({
+          skip,
+          take: limit,
+          order: { id: 'ASC' },
+        });
+      
+        return { data, total };
     }
+  
 
     async findParticipantById(id: number): Promise<Participant|null> {
         this.logger.log(`Searching relationship User-Event by id ${id}`)

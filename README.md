@@ -38,9 +38,3 @@ $ docker compose --profile prod up --build
 # test
 $ npm run tests
 ```
-
-
-TODO
-
-2. Gihub СI/CD
-3. JSDoc
